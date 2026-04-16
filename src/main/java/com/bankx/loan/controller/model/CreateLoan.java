@@ -11,5 +11,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class CreateLoan {
     BigDecimal loanAmount;
-    short term;
+    Short term;
+
+    /**
+     * {@link CreateLoan} should know itself if valid.
+     * More single responsibility theory.
+     *
+     * @return isValid
+     */
+    public boolean isValid(){
+        return loanAmount != null && term != null;
+    }
 }
