@@ -6,6 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Provides JPA support for a {@link LoanEntity}.
+ */
 @Repository
 public interface LoanRepository extends JpaRepository<LoanEntity, UUID> {
 

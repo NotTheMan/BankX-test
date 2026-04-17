@@ -1,25 +1,41 @@
 package com.bankx.loan.controller.model;
 
-import com.bankx.loan.repository.entity.LoanEntity.LoanStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-
 import java.math.BigDecimal;
-import java.util.UUID;
 
+/**
+ * Input Object for the {@link com.bankx.loan.controller.LoanController} in order to create a Loan.
+ */
 @Data
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
 public class CreateLoan {
-    BigDecimal loanAmount;
-    Short term;
+    private BigDecimal loanAmount;
+    private Short term;
 
     /**
-     * {@link CreateLoan} should know itself if valid.
-     * More single responsibility theory.
+     * {@link CreateLoan} should know itself if the loanAmount is valid or not.
+     * Single responsibility theory is used here.
      *
-     * @return isValid
+     * @return isLoanAmountValid
      */
-    public boolean isValid(){
-        return loanAmount != null && term != null;
+    @JsonIgnore
+    public boolean isAmountValid(){
+        return
+                loanAmount != null &&
+                loanAmount.compareTo(BigDecimal.ZERO) <= 0 &&
+                term != null;
+    }
+
+    /**
+     * {@link CreateLoan} should know itself if the term is valid or not.
+     * Single responsibility theory is used here.
+     *
+     * @return isTermValid
+     */
+    @JsonIgnore
+    public boolean isTermValid(){
+        return term != null && term > 0;
     }
 }

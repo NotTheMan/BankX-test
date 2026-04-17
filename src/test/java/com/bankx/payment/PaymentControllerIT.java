@@ -1,8 +1,9 @@
-package com.bankx.loan.controller;
+package com.bankx.payment;
 
 import com.bankx.loan.controller.model.CreateLoan;
 import com.bankx.loan.controller.model.Loan;
 import com.bankx.loan.repository.entity.LoanEntity;
+import com.bankx.payment.controller.model.Payment;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ import java.math.RoundingMode;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class LoanControllerIT {
+public class PaymentControllerIT {
     @LocalServerPort
     private int port;
 
@@ -29,20 +30,28 @@ public class LoanControllerIT {
     }
 
     /**
-     * Tests creating a {@link Loan} and whether the retrieved loan is equal to the created loan.
+     * Tests making a {@link Payment} against a created {@link Loan}.
      */
     @Test
     void createLoanThenRetrieve() {
         var loanAmount = new BigDecimal(10).setScale(2, RoundingMode.UNNECESSARY);
+        var paymentAmount = new BigDecimal(10).setScale(2, RoundingMode.UNNECESSARY);
+        var expectedRemainingBalanceAfterPayment = new BigDecimal(0).setScale(2, RoundingMode.UNNECESSARY);
+        var expectedStatus = LoanEntity.LoanStatus.SETTLED;
         var createLoan = new CreateLoan(loanAmount, (short) 1);
 
         Loan createdLoan = createLoan(createLoan);
-        // Assert created Loan
+        // Assert created Loan, to aid in finding problems down the line
         assertCreatedLoanIsCorrect(createdLoan, loanAmount);
 
+        var payment = new Payment(createdLoan.getLoanId(), paymentAmount);
+        makePayment(payment);
+
         Loan retrievedLoan = retrieveLoan(createdLoan.getLoanId());
-        // Assert that retrieved and created loan are equal
-        Assertions.assertEquals(createdLoan, retrievedLoan);
+
+        // Assert that retrieved loan reflects the payment
+        Assertions.assertEquals(expectedRemainingBalanceAfterPayment, retrievedLoan.getRemainingBalance());
+        Assertions.assertEquals(expectedStatus, retrievedLoan.getStatus());
     }
 
     private static void assertCreatedLoanIsCorrect(Loan createdLoan, BigDecimal loanAmount) {
@@ -51,6 +60,16 @@ public class LoanControllerIT {
         Assertions.assertEquals((short) 1, createdLoan.getTerm());
         Assertions.assertEquals(LoanEntity.LoanStatus.ACTIVE, createdLoan.getStatus());
         Assertions.assertEquals(createdLoan.getLoanAmount(), createdLoan.getRemainingBalance());
+    }
+
+    private void makePayment(Payment payment) {
+        client.post()
+            .uri("payments")
+            .body(payment)
+            .exchange()
+            .expectStatus().isCreated()
+            .expectBody(Void.class)
+            .returnResult();
     }
 
     private Loan createLoan(CreateLoan createLoan) {

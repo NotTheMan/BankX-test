@@ -1,4 +1,4 @@
-package com.bankx.loan;
+package com.bankx;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
