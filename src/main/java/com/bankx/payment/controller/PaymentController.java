@@ -1,6 +1,5 @@
 package com.bankx.payment.controller;
 
-import com.bankx.loan.controller.model.Loan;
 import com.bankx.loan.service.exception.LoanNotFoundException;
 import com.bankx.payment.controller.model.Payment;
 import com.bankx.payment.service.PaymentService;
