@@ -24,8 +24,7 @@ public class CreateLoan {
     public boolean isAmountValid(){
         return
                 loanAmount != null &&
-                loanAmount.compareTo(BigDecimal.ZERO) <= 0 &&
-                term != null;
+                loanAmount.compareTo(BigDecimal.ZERO) > 0;
     }
 
     /**
