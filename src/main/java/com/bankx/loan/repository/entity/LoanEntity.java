@@ -2,7 +2,6 @@ package com.bankx.loan.repository.entity;
 
 import com.bankx.loan.controller.model.CreateLoan;
 import com.bankx.loan.controller.model.Loan;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

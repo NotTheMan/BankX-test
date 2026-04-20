@@ -6,11 +6,7 @@ import com.bankx.loan.repository.LoanRepository;
 import com.bankx.loan.repository.entity.LoanEntity;
 import com.bankx.loan.service.exception.CreateLoanNotValidException;
 import com.bankx.loan.service.exception.LoanNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -31,6 +27,7 @@ public class LoanService {
      *
      * @param createLoan to create
      * @return createdLoan that was created in persistent storage
+     * @throws CreateLoanNotValidException when {@link CreateLoan} is invalid
      */
     public Loan create(CreateLoan createLoan) throws CreateLoanNotValidException {
         validate(createLoan);

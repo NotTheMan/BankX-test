@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+/**
+ * Service that provides payment functionality against an existing Loan.
+ */
 @Service
 public class PaymentService {
 
@@ -28,6 +31,14 @@ public class PaymentService {
         this.loanService = loanService;
     }
 
+    /**
+     * Makes a payment against a {@link LoanEntity}.
+     * The @Transactional annotation ensures that all or no database updates are made.
+     *
+     * @param payment to be made
+     * @throws PaymentAmountIncorrectException when the paymentAmount is invalid
+     * @throws LoanNotFoundException when the loanId isn't found
+     */
     @Transactional
     public void makePayment(Payment payment)
             throws PaymentAmountIncorrectException, LoanNotFoundException {
@@ -41,6 +52,13 @@ public class PaymentService {
         paymentRepository.save(PaymentEntity.fromPayment(payment));
     }
 
+    /**
+     * Updates a {@link LoanEntity} with the given {@link Payment}.
+     * Loan is set to SETTLED status when the remaining balance reaches Zero.
+     *
+     * @param loan to be updated
+     * @param payment information to update loan with
+     */
     private void updateLoanWithPayment(LoanEntity loan, Payment payment) {
         loan.setRemainingBalance(
                 loan.getRemainingBalance().subtract(payment.getPaymentAmount())
@@ -51,6 +69,13 @@ public class PaymentService {
         }
     }
 
+    /**
+     * Validates all aspects of the payment amount.
+     *
+     * @param loan affected by payment
+     * @param payment to be made against loan
+     * @throws PaymentAmountIncorrectException when the payment amount is invalid
+     */
     private void validatePaymentAmount(LoanEntity loan, Payment payment)
             throws PaymentAmountIncorrectException {
 
