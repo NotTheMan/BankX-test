@@ -89,6 +89,12 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+					<excludes>
+						<!-- Exclude main method, as it's not run in testing -->
+						<exclude>com/bankx/LoanApplication.class</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
