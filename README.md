@@ -7,6 +7,14 @@ Provides functionality to:
 
 HTTP endpoints are provided from where the functionality can be accessed.
 
+An in-memory H2 Database is used for persistent storage. The database entries will be lost once the application has been shut down.
+
+Maven is used for dependency management.
+
+# Pre-requisites for building or running the application
+- Maven
+- JDK 17+ 
+
 # Building the application
 
 `mvn clean compile`
